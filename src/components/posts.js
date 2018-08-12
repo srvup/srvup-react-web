@@ -2,9 +2,13 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
+import {API_PUBLIC_KEY} from './../config'
 import {Link} from '../utils/Routing'
 import Markdown from '../utils/Markdown'
-import Lookup from '../utils/Lookup'
+
+
+import srvup from 'srvup'
+srvup.api(API_PUBLIC_KEY)
 
 
 class PostDetailComponent extends Component {
@@ -23,7 +27,6 @@ class PostDetailComponent extends Component {
   }
 
   handleResponse = (data, status) =>{
-    console.log(data, status)
     if (status === 200){
       this.setState({
         post: data,
@@ -39,8 +42,7 @@ class PostDetailComponent extends Component {
 
   componentDidMount () {
     const {slug} = this.props.match.params
-    let lookup = new Lookup(`/posts/${slug}/`)
-    lookup.get(this.handleResponse)
+    srvup.get(`/posts/${slug}/`, this.handleResponse)
   }
 
 
@@ -74,7 +76,7 @@ class PostsComponent extends Component {
   }
 
   handleResponse = (data, status) =>{
-    console.log(data)
+    // console.log(data)
     if (status === 200){
       this.setState({
         posts: data.results,
@@ -83,8 +85,9 @@ class PostsComponent extends Component {
     }
   }
   componentDidMount () {
-    let lookup = new Lookup('/posts/')
-    lookup.get(this.handleResponse)
+    // let lookup = new Lookup('/posts/')
+    // lookup.get(this.handleResponse)
+    srvup.get(`/posts/`, this.handleResponse)
   }
   render () {
     const {posts} = this.state

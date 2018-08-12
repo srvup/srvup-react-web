@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
+import {API_PUBLIC_KEY} from './../config'
+import {FormErrorText, Link} from '../utils'
 
-import {FormErrorText, Link, Lookup} from '../utils'
+import srvup from 'srvup'
+srvup.api(API_PUBLIC_KEY)
 
 
 class LoginComponent extends Component {
@@ -40,12 +43,12 @@ class LoginComponent extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault()
-    let lookup = new Lookup(`/login/`)
     const {username} = this.state
     const {password} = this.state
     const data = {username: username, 
                 password:  password}
-    lookup.post(data, this.handleResponse)
+    const includeAuthToken = false
+    srvup.post('/login/', data, this.handleResponse, includeAuthToken)
   }
 
 
@@ -149,7 +152,6 @@ class RegisterComponent extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault()
-    let lookup = new Lookup(`/register/`)
     const {username} = this.state
     const {email} = this.state
     const {password} = this.state
@@ -158,7 +160,8 @@ class RegisterComponent extends Component {
                 password:  password, 
                 password2: password2, 
                 email: email}
-    lookup.post(data, this.handleResponse)
+    const includeAuthToken = false
+    srvup.post('/register/', data, this.handleResponse, includeAuthToken)
 
   }
   componentDidMount () {

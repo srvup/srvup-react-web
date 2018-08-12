@@ -11,7 +11,8 @@
     "react-markdown": "^3.4.1",
     "react-router-dom": "^4.3.1",
     "react-syntax-highlighter": "^8.0.1",
-    "remark-shortcodes": "^0.2.1"
+    "remark-shortcodes": "^0.2.1",
+    "srvup": "0.0.5"
   },
   "devDependencies": {
     "react-scripts": "1.1.4"
