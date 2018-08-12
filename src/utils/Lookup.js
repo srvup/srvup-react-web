@@ -1,11 +1,13 @@
 import createHistory from 'history/createBrowserHistory'
-
-const History = createHistory()
-
 import {
     API_ENDPOINT,
     API_PUBLIC_KEY
 } from '../config'
+
+
+const History = createHistory()
+
+
 
 function checkResponseStatus (response) {
   const location = History.location
