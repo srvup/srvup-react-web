@@ -2,12 +2,10 @@ import createHistory from 'history/createBrowserHistory'
 
 const History = createHistory()
 
-// const TOKEN = 'dae9308d-3af7-4978-b3f1-31760522c4f4'
-// const INTERNAL_API_URL = 'http://api.desalsa.io:8000/v1'
-
-const TOKEN = 'd1409f93-369e-42e3-adf4-5de34b474690'
-const INTERNAL_API_URL = 'https://api.srvup.com/v1'
-
+import {
+    API_ENDPOINT,
+    API_PUBLIC_KEY
+} from '../config'
 
 function checkResponseStatus (response) {
   const location = History.location
@@ -33,7 +31,7 @@ class LookupClass {
     if (endpoint) {
       this.endpoint = endpoint
     } else {
-      this.endpoint = `${INTERNAL_API_URL}${this.path}`
+      this.endpoint = `${API_ENDPOINT}${this.path}`
     }
 
     this.token = window.localStorage.getItem('token')
@@ -44,7 +42,7 @@ class LookupClass {
     let lookupOptions = {
       headers: {
         'Content-Type': 'application/json',
-        'x-srvup-signature': `${TOKEN}`
+        'x-srvup-signature': `${API_PUBLIC_KEY}`
       },
       method: method
 
