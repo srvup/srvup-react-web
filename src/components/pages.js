@@ -10,11 +10,11 @@ import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
 
-class PostDetailComponent extends Component {
+class PageDetailComponent extends Component {
   constructor(props){
     super(props)
     this.state = {
-      post: {
+      page: {
         slug: "", 
         title: "", 
         content: "", 
@@ -28,7 +28,7 @@ class PostDetailComponent extends Component {
   handleResponse = (data, status) =>{
     if (status === 200){
       this.setState({
-        post: data,
+        page: data,
         loading: false
       })
     } else {
@@ -41,20 +41,20 @@ class PostDetailComponent extends Component {
 
   componentDidMount () {
     const {slug} = this.props.match.params
-    srvup.get(`/posts/${slug}/`, this.handleResponse)
+    srvup.get(`/pages/${slug}/`, this.handleResponse)
   }
 
 
   render() {
-    const {post} = this.state
+    const {page} = this.state
     return ( <div className='py-3'>
 
-      {post && <div>
-          <h1>{post.title}</h1>
-          {post.content && <Markdown>{post.content}</Markdown>}
+      {page && <div>
+          <h1>{page.title}</h1>
+          {page.content && <Markdown>{page.content}</Markdown>}
           </div>
        }
-       {post === null && this.state.loading === false ? <p>Not found</p> : ""}
+       {page === null && this.state.loading === false ? <p>Not found</p> : ""}
 
       </div>
      )
@@ -62,14 +62,14 @@ class PostDetailComponent extends Component {
 }
 
 
-export const PostDetail = withRouter(PostDetailComponent)
+export const PageDetail = withRouter(PageDetailComponent)
 
 
-class PostsComponent extends Component {
+class PagesComponent extends Component {
   constructor(props){
     super(props)
     this.state = {
-      posts: [],
+      pages: [],
       count: 0
     }
   }
@@ -78,23 +78,23 @@ class PostsComponent extends Component {
     // console.log(data)
     if (status === 200){
       this.setState({
-        posts: data.results,
+        pages: data.results,
         count: data.count
       })
     }
   }
   componentDidMount () {
-    // let lookup = new Lookup('/posts/')
+    // let lookup = new Lookup('/pages/')
     // lookup.get(this.handleResponse)
-    srvup.get(`/posts/`, this.handleResponse)
+    srvup.get(`/pages/`, this.handleResponse)
   }
   render () {
-    const {posts} = this.state
+    const {pages} = this.state
     return (
         <div className='py-3'>
-          {posts.length > 0 && posts.map((data, index)=>{
+          {pages.length > 0 && pages.map((data, index)=>{
            return <div className='border-bottom mb-3' key={index}>
-             <h1><Link to={`/posts/${data.slug}`}>{data.title}</Link></h1>
+             <h1><Link to={`/pages/${data.slug}`}>{data.title}</Link></h1>
              {data.content && <Markdown>{data.content}</Markdown>}
              </div>
           })}
@@ -104,6 +104,6 @@ class PostsComponent extends Component {
 }
 
 
-const Posts = withRouter(PostsComponent)
-export default Posts
+const Pages = withRouter(PagesComponent)
+export default Pages
 

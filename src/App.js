@@ -6,6 +6,7 @@ import './App.css'
 
 import {LoginPage, RegisterPage} from './components/auth'
 import Posts, {PostDetail} from './components/posts'
+import Pages, {PageDetail} from './components/pages'
 import {Link} from './utils'
 import {Helmet} from 'react-helmet'
 const History = createHistory()
@@ -38,6 +39,9 @@ class App extends Component {
               <Route exact path='/posts' component={Posts} />
               <Redirect exact from='/post' to='/posts' />
               <Route exact path='/posts/:slug' component={PostDetail} />
+              <Route exact path='/pages' component={Pages} />
+              <Redirect exact from='/page' to='/pages' />
+              <Route exact path='/pages/:slug' component={PageDetail} />
             </Switch>
           </div>
         </div>
