@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 
 
 import {API_PUBLIC_KEY} from './../config'
-import {Page404} from '../design'
+import {Loading, Page404} from '../design'
 import {Link, Markdown} from '../utils/'
 
 import srvup from 'srvup'
@@ -57,7 +57,7 @@ class PostDetailComponent extends Component {
   render() {
     const {post} = this.state
     return ( <div className='py-3'>
-
+      <Loading className='text-center' isLoading={this.state.loading} />
       {post && <div>
           <h1>{post.title}</h1>
           {post.content && <Markdown>{post.content}</Markdown>}
@@ -79,19 +79,25 @@ class PostsComponent extends Component {
     super(props)
     this.state = {
       posts: [],
-      count: 0
+      count: 0,
+      loading: true
     }
   }
 
   handleResponse = (data, status) =>{
     // console.log(data)
     if (!this.cancelLookup) {
-    if (status === 200){
-      this.setState({
-        posts: data.results,
-        count: data.count
-      })
-    }
+      if (status === 200){
+        this.setState({
+          posts: data.results,
+          count: data.count,
+          loading: false
+        })
+      } else {
+        this.setState({
+          loading: false
+        })
+      }
     }
   }
   componentDidMount () {
@@ -110,6 +116,7 @@ class PostsComponent extends Component {
     const {posts} = this.state
     return (
         <div className='py-3'>
+        <Loading className='text-center' isLoading={this.state.loading} />
           {posts.length > 0 && posts.map((data, index)=>{
            return <div className='border-bottom mb-3' key={index}>
              <h1><Link default to={`/posts/${data.slug}`}>{data.title}</Link></h1>

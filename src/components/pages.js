@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 
 
 import {API_PUBLIC_KEY} from './../config'
-import {Page404} from '../design'
+import {Loading, Page404} from '../design'
 import {Link, Markdown} from '../utils/'
 
 import srvup from 'srvup'
@@ -62,7 +62,7 @@ class PageDetailComponent extends Component {
     const {loading} = this.state
     const {status} = this.state
     return ( <div className='py-3'>
-
+        <Loading className='text-center' isLoading={loading} />
         {page && <div>
           <h1>{page.title}</h1>
           {page.content && <Markdown>{page.content}</Markdown>}
@@ -85,31 +85,45 @@ class PagesComponent extends Component {
     super(props)
     this.state = {
       pages: [],
-      count: 0
+      count: 0,
+      loading: true,
     }
   }
 
   handleResponse = (data, status) =>{
-    // console.log(data)
-    if (status === 200){
-      this.setState({
-        pages: data.results,
-        count: data.count
-      })
+     if (!this.cancelLookup){
+      if (status === 200){
+        this.setState({
+          pages: data.results,
+          count: data.count,
+          loading: false,
+        })
+      } else {
+        this.setState({
+          loading: false
+        })
+      }
     }
   }
   componentDidMount () {
-    // let lookup = new Lookup('/pages/')
-    // lookup.get(this.handleResponse)
-    srvup.get(`/pages/`, this.handleResponse)
+    if (!this.cancelLookup){
+      srvup.get(`/pages/`, this.handleResponse)
+    }
+    
   }
+
+  componentWillUnmount () {
+    this.cancelLookup = true
+  }
+
   render () {
     const {pages} = this.state
     return (
         <div className='py-3'>
+          <Loading className='text-center' isLoading={this.state.loading} />
           {pages.length > 0 && pages.map((data, index)=>{
            return <div className='border-bottom mb-3' key={index}>
-             <h1><Link to={`/pages/${data.slug}`}>{data.title}</Link></h1>
+             <h1><Link default to={`/pages/${data.slug}`}>{data.title}</Link></h1>
              {data.content && <Markdown>{data.content}</Markdown>}
              </div>
           })}

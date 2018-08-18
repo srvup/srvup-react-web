@@ -10,6 +10,7 @@
     "react-helmet": "^5.2.0",
     "react-markdown": "^3.4.1",
     "react-router-dom": "^4.3.1",
+    "react-spinkit": "^3.0.0",
     "react-syntax-highlighter": "^8.0.1",
     "remark-shortcodes": "^0.2.1",
     "srvup": "0.0.5"
