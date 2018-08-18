@@ -3,8 +3,8 @@ import {withRouter} from 'react-router-dom'
 
 
 import {API_PUBLIC_KEY} from './../config'
-import {Link} from '../utils/Routing'
-import Markdown from '../utils/Markdown'
+import {Page404} from '../design'
+import {Link, Markdown} from '../utils/'
 
 import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
@@ -21,40 +21,55 @@ class PageDetailComponent extends Component {
         draft: false, 
         publish: null
       },
+      status: 0,
       loading: true
     }
   }
 
   handleResponse = (data, status) =>{
-    if (status === 200){
-      this.setState({
-        page: data,
-        loading: false
-      })
-    } else {
-      this.setState({
-        loading: false
-      })
-    }
+    if (!this.cancelLookup) {
+      if (status === 200){
+        this.setState({
+          page: data,
+          status: status,
+          loading: false
+        })
+      } else {
+        this.setState({
+          status: status,
+          loading: false
+        })
+      }
+     }
   }
 
 
   componentDidMount () {
-    const {slug} = this.props.match.params
-    srvup.get(`/pages/${slug}/`, this.handleResponse)
+    let slug = this.props.match.params.slug || this.props.slug
+    if (slug && !this.cancelLookup){
+      srvup.get(`/pages/${slug}/`, this.handleResponse)
+    }
+    
+  }
+
+  componentWillUnmount () {
+    this.cancelLookup = true
   }
 
 
   render() {
     const {page} = this.state
+    const {loading} = this.state
+    const {status} = this.state
     return ( <div className='py-3'>
 
-      {page && <div>
+        {page && <div>
           <h1>{page.title}</h1>
           {page.content && <Markdown>{page.content}</Markdown>}
           </div>
        }
-       {page === null && this.state.loading === false ? <p>Not found</p> : ""}
+
+       {status === 404 && loading === false ? <Page404/> : ""}
 
       </div>
      )
