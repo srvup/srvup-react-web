@@ -25,6 +25,7 @@ class LoginComponent extends Component {
         token: data.token,
         loading: false
       })
+      srvup.userToken(data.token)
     } else {
       this.setState({
         loading: false
@@ -45,10 +46,7 @@ class LoginComponent extends Component {
     event.preventDefault()
     const {username} = this.state
     const {password} = this.state
-    const data = {username: username, 
-                password:  password}
-    const includeAuthToken = false
-    srvup.post('/login/', data, this.handleResponse, includeAuthToken)
+    srvup.login(username, password, this.handleResponse)
   }
 
 
