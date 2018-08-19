@@ -5,6 +5,7 @@
   "dependencies": {
     "emoji-dictionary": "^1.0.9",
     "history": "^4.7.2",
+    "moment": "^2.22.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-helmet": "^5.2.0",
@@ -13,7 +14,7 @@
     "react-spinkit": "^3.0.0",
     "react-syntax-highlighter": "^8.0.1",
     "remark-shortcodes": "^0.2.1",
-    "srvup": "0.0.5"
+    "srvup": "0.0.766"
   },
   "devDependencies": {
     "react-scripts": "1.1.4"
