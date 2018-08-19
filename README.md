@@ -1,7 +1,7 @@
-React.js + Srvup API | Web Client
+React.js, Srvup.js, and the Srvup API // Web Client
 ======
 
-This is an example of how to use React.js to integrate with the srvup api.
+This is an example of how to use React.js & srvup.js to integrate with the [srvup api](https://www.srvup.com).
 
 
 #### Getting Started
