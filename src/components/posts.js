@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
+import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from './../config'
 import {Loading, Page404} from '../design'
-import {Link, Markdown} from '../utils/'
 
-import srvup from 'srvup'
+import {Link} from '../utils/'
+
+import srvup, {Markdown} from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
 
@@ -19,7 +21,9 @@ class PostDetailComponent extends Component {
         title: "", 
         content: "", 
         draft: false, 
-        publish: null
+        publish: null,
+        displayComments: false,
+        comments: {count: 0, path: ""}
       },
       loading: true
     }
@@ -44,7 +48,7 @@ class PostDetailComponent extends Component {
   componentDidMount () {
     let slug = this.props.match.params.slug || this.props.slug
     if (slug && !this.cancelLookup){
-      srvup.get(`/posts/${slug}/`, this.handleResponse)
+      srvup.posts(this.handleResponse, slug)
     }
     
   }
@@ -56,12 +60,17 @@ class PostDetailComponent extends Component {
 
   render() {
     const {post} = this.state
+    const comments = this.state.post.comments
     return ( <div className='py-3'>
       <Loading className='text-center' isLoading={this.state.loading} />
       {post && <div>
           <h1>{post.title}</h1>
           {post.content && <Markdown>{post.content}</Markdown>}
+
+         
+          {post.displayComments && <Comments count={comments.count} path={comments.path} />}
           </div>
+
        }
        {post === null && this.state.loading === false ? <Page404 /> : ""}
 
@@ -79,17 +88,21 @@ class PostsComponent extends Component {
     super(props)
     this.state = {
       posts: [],
+      next: null,
       count: 0,
       loading: true
     }
   }
 
   handleResponse = (data, status) =>{
-    // console.log(data)
+    console.log(data)
     if (!this.cancelLookup) {
       if (status === 200){
+        let currentPosts = this.state.posts
+        let newPosts = currentPosts.concat(data.results)
         this.setState({
-          posts: data.results,
+          posts: newPosts,
+          next: data.next,
           count: data.count,
           loading: false
         })
@@ -100,11 +113,17 @@ class PostsComponent extends Component {
       }
     }
   }
+
+  getNext = (event) =>{
+    if (!this.cancelLookup && this.state.next){
+      srvup.get(this.state.next, this.handleResponse)
+    }
+    
+  }
   componentDidMount () {
-    // let lookup = new Lookup('/posts/')
-    // lookup.get(this.handleResponse)
     if (!this.cancelLookup) {
-      srvup.get(`/posts/`, this.handleResponse)
+      srvup.posts(this.handleResponse)
+      // srvup.get('/posts/', this.handleResponse, false)
     }
     
   }
@@ -118,11 +137,12 @@ class PostsComponent extends Component {
         <div className='py-3'>
         <Loading className='text-center' isLoading={this.state.loading} />
           {posts.length > 0 && posts.map((data, index)=>{
-           return <div className='border-bottom mb-3' key={index}>
+           return <div className='border-bottom mb-3 pb-5' key={index}>
              <h1><Link default to={`/posts/${data.slug}`}>{data.title}</Link></h1>
-             {data.content && <Markdown>{data.content}</Markdown>}
+             {data.content && <Markdown previewCutoff>{data.content}</Markdown>}
              </div>
           })}
+          {this.state.next && <button className='btn btn-primary' onClick={this.getNext}>Load more</button>}
         </div>
     )
   }
