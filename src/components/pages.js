@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
-import {API_PUBLIC_KEY} from './../config'
+import {Comments} from '../comments'
+import {API_PUBLIC_KEY} from '../config'
 import {Loading, Page404} from '../design'
-import {Link, Markdown} from '../utils/'
+import {Link} from '../utils/'
 
-import srvup from 'srvup'
+import srvup, {Markdown} from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
 
@@ -19,7 +20,9 @@ class PageDetailComponent extends Component {
         title: "", 
         content: "", 
         draft: false, 
-        publish: null
+        publish: null,
+        displayComments: false,
+        comments: {count: 0, path: ""}
       },
       status: 0,
       loading: true
@@ -47,7 +50,7 @@ class PageDetailComponent extends Component {
   componentDidMount () {
     let slug = this.props.match.params.slug || this.props.slug
     if (slug && !this.cancelLookup){
-      srvup.get(`/pages/${slug}/`, this.handleResponse)
+      srvup.pages(this.handleResponse, slug)
     }
     
   }
@@ -61,11 +64,14 @@ class PageDetailComponent extends Component {
     const {page} = this.state
     const {loading} = this.state
     const {status} = this.state
+    const comments = this.state.page.comments
     return ( <div className='py-3'>
         <Loading className='text-center' isLoading={loading} />
         {page && <div>
           <h1>{page.title}</h1>
           {page.content && <Markdown>{page.content}</Markdown>}
+          
+          {page.displayComments && <Comments count={comments.count} path={comments.path} />}
           </div>
        }
 
@@ -107,7 +113,7 @@ class PagesComponent extends Component {
   }
   componentDidMount () {
     if (!this.cancelLookup){
-      srvup.get(`/pages/`, this.handleResponse)
+      srvup.pages(this.handleResponse)
     }
     
   }
