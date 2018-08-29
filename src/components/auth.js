@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
-import {API_PUBLIC_KEY} from './../config'
+import {API_PUBLIC_KEY, History} from './../config'
 import {FormErrorText, Link} from '../utils'
 
+import {parseQueryString, isSafeRedirect} from './../utils'
 import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
@@ -19,13 +20,21 @@ class LoginComponent extends Component {
   }
 
   handleResponse = (data, status) =>{
-    console.log(data)
+    // console.log(data)
     if (status === 200){
       this.setState({
         token: data.token,
         loading: false
       })
       srvup.userToken(data.token)
+      const searchDict = parseQueryString(History.location.search)
+      const next = searchDict.next
+      const isSafe = isSafeRedirect(next)
+      if (isSafe){
+        History.replace(next)
+      } else {
+        History.replace("/")
+      }
     } else {
       this.setState({
         loading: false
