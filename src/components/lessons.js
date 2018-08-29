@@ -3,11 +3,13 @@ import {withRouter} from 'react-router-dom'
 
 
 import {Comments} from '../comments'
+import {File} from './files'
 import {API_PUBLIC_KEY} from '../config'
 import {Loading, Page404} from '../design'
-import {Link} from '../utils/'
 
 import srvup, {Markdown} from 'srvup'
+
+
 srvup.api(API_PUBLIC_KEY)
 
 
@@ -63,6 +65,7 @@ class LessonDetailComponent extends Component {
 
   render() {
     const {lesson} = this.state
+    console.log(lesson)
     const {loading} = this.state
     const {status} = this.state
     const comments = this.state.lesson.comments
@@ -71,19 +74,9 @@ class LessonDetailComponent extends Component {
         {lesson && <div>
           <h1>{lesson.title}</h1>
           {lesson.content && <Markdown>{lesson.content}</Markdown>}
+
+          {lesson.video && <File className='my-5' resource={lesson.video} />}
             
-
-          {lesson.lessons &&  <div className='my-5'>
-           {lesson.lessons.length > 0  && <div>
-             <h3>Lessons</h3>
-                {lesson.lessons.length > 0 && lesson.lessons.map((lesson, index)=>{
-                return <li key={index}><Link to={`/lessons/${lesson.slug}/lessons/${lesson.slug}`}>{lesson.order} {lesson.title}</Link></li>
-              })}
-
-            </div>
-            }
-            </div>
-           }
 
           {lesson.displayComments && <Comments count={comments.count} path={comments.path} />}
           </div>
