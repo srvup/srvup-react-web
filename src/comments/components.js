@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 
-import {Timesince} from '../utils'
+
+import {Link, Timesince} from '../utils'
 
 
-import {API_PUBLIC_KEY} from './../config'
+import {API_PUBLIC_KEY, History} from './../config'
 import {Loading} from '../design'
-import srvup, {Markdown} from 'srvup'
+import srvup, {Markdown, handleLoginRequired} from 'srvup'
 
 import './comments.css'
 
@@ -17,7 +18,8 @@ class CommentForm extends Component {
         this.state = {
             content: "",
             parent: "",
-            path: ""
+            path: "",
+            loggedIn: false,
         }
     }
 
@@ -37,7 +39,6 @@ class CommentForm extends Component {
     }
 
     handleNewComment = (response, status) => {
-      console.log(response, status)
          if (status === 201 && !this.isCancelled) {
              this.setState({
                  content: '',
@@ -45,6 +46,8 @@ class CommentForm extends Component {
              if (this.props.newComment ) {
                  this.props.newComment(response)
              }
+         } else {
+           handleLoginRequired(status, History)
          }
 
     }
@@ -58,11 +61,14 @@ class CommentForm extends Component {
 
     defaultState = () => {
         const {path} = this.props
+        // console.log(path)
         const parent = this.props.parent || ""
+        const {loggedIn} = this.props
         if (!this.isCancelled){
             this.setState({
                 path: path,
-                parent: parent
+                parent: parent,
+                loggedIn: loggedIn
             })
         }
     }
@@ -82,13 +88,17 @@ class CommentForm extends Component {
   }
     render (){
         const {content} = this.state
+        const location = History.location
+        const next = `${location.pathname}${location.search}${location.hash}`
         const btnText = this.props.parent ? "Reply" : "Comment"
         return (
-            <form onSubmit={this.didSubmit} className={`${this.props.className ? this.props.className : 'my-3 row'}`}>
-                
+            <div> {this.state.loggedIn === false ?
+              <p className='border border-rounded bg-light rounded py-5 px-4'>Please <Link to={`/login?next=${next}`}>Login</Link> or <Link to={`/register?next=${next}`}>Register</Link> to comment</p>
+              :
+              <form onSubmit={this.didSubmit} className={`${this.props.className ? this.props.className : 'my-3 row'}`}>
                 {content && 
                  <div className='d-block d-md-none col-12'>
-                    <small className='text-muted'>Preivew</small>
+                    <small className='text-muted'>Preview</small>
                    <Markdown input={content} />
                  </div>
                }
@@ -100,7 +110,7 @@ class CommentForm extends Component {
                </div>
                {content && 
                  <div className='d-none d-md-block col-md-6'>
-                    <small className='text-muted'>Preivew</small>
+                    <small className='text-muted'>Preview</small>
                    <Markdown input={content} />
                  </div>
                }
@@ -108,6 +118,8 @@ class CommentForm extends Component {
                 <button type='submit' className='btn btn-primary'> {btnText} </button>
                 </div>
             </form>
+          }
+          </div>
          )
     }
 }
@@ -130,6 +142,7 @@ class CommentInline extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            loggedIn: false,
             comment: {
                 content: '',
                 user: {
@@ -154,9 +167,11 @@ class CommentInline extends Component {
     defaultState = () => {
         const {replies} = this.props.comment
         const {comment} = this.props
+        const {loggedIn} = this.props
         this.setState({
             comment: comment,
-            replies: replies
+            replies: replies,
+            loggedIn: loggedIn
         })
     }
 
@@ -171,6 +186,7 @@ class CommentInline extends Component {
     render (){
         const {comment} = this.state
         const {replies} = this.state
+        const {loggedIn} = this.state
         return (
             <div className="media border-top py-3">
               {comment.user.image && <img className="align-self-start mr-3 square-64 rounded-circle" src={comment.user.image} alt={`${comment.user.username} thumbnail`} /> }
@@ -183,7 +199,7 @@ class CommentInline extends Component {
                     {replies.length > 0 && replies.map((reply, index)=>{
                         return <CommentReplyInline comment={reply} key={`reply-${index}`} />
                     })}
-                <CommentForm path={this.props.path} parent={comment.id} newComment={this.handleNewComment} />
+                <CommentForm loggedIn={loggedIn} path={this.props.path} parent={comment.id} newComment={this.handleNewComment} />
                  </div>
               </div>
             </div>
@@ -197,7 +213,8 @@ class Comments extends Component {
     this.state = {
       comments: [],
       next: null,
-      loading: true
+      loading: true,
+      loggedIn: false
     }
   }
 
@@ -207,7 +224,7 @@ class Comments extends Component {
 
   }
   handleComments = (response, status) => {
-    console.log(response, status)
+     // console.log(response, status)
     if (status === 200 && !this.isCancelled) {
         let currentComments = this.state.comments
         currentComments = currentComments.concat(response.results)
@@ -221,14 +238,22 @@ class Comments extends Component {
             loading: false,
             errorOccured: true
         })
+         handleLoginRequired(response, History)
     }
   }
+
   componentDidMount () {
     const {path} = this.props
     if (path) {
       // do lookup
       this.grabComments()
     }
+     srvup.verifyUser((response, status)=>{
+       this.setState({
+         loggedIn: status === 200 ? true : false,
+       })
+     })
+
   }
 
   loadMore = (event) => {
@@ -253,16 +278,17 @@ class Comments extends Component {
   }
   render () {
     const {comments} = this.state
+    const {loggedIn} = this.state
     const {next} = this.state
     return (
       <div className={`${this.props.className && this.props.className}`}>
         <h5>Comments</h5>
         <Loading isLoading={this.state.loading} />
         <div> 
-        <CommentForm path={this.props.path} newComment={this.handleNewComment} />
+        <CommentForm loggedIn={loggedIn} path={this.props.path} newComment={this.handleNewComment} />
         
         {comments.length > 0 && comments.map((item, index)=>{
-             return <CommentInline comment={item} key={index} path={this.props.path} newComment={this.handleNewComment} />
+             return <CommentInline loggedIn={loggedIn} comment={item} key={index} path={this.props.path} newComment={this.handleNewComment} />
         })}
 
         {next && <button className='btn btn-outline-primary' onClick={this.loadMore}>Load More</button>}

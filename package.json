@@ -14,7 +14,8 @@
     "react-spinkit": "^3.0.0",
     "react-syntax-highlighter": "^8.0.1",
     "remark-shortcodes": "^0.2.1",
-    "srvup": "0.0.766"
+    "srvup": "0.0.775",
+    "url-parse": "^1.4.3"
   },
   "devDependencies": {
     "react-scripts": "1.1.4"

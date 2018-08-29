@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 
 import { Router, Route, Switch, Redirect} from 'react-router-dom'
-import createHistory from 'history/createBrowserHistory'
+
 import './App.css'
 
+import {History} from './config'
 import {LoginPage, RegisterPage} from './components/auth'
-import Posts, {PostDetail} from './components/posts'
+
+import Courses, {CourseDetail} from './components/courses'
+import {LessonDetail} from './components/lessons'
+
 import Pages, {PageDetail} from './components/pages'
+import Posts, {PostDetail} from './components/posts'
+
 import {Link} from './utils'
 import {Page404, Navbar, AboutPage, ContactPage} from './design'
 import {Helmet} from 'react-helmet'
-
-const History = createHistory()
 
 const logo = 'https://srvupcdn.com/c/srvup/fil-yfo5zjdk/srvup_logo.jpg'
 
@@ -36,18 +40,24 @@ class App extends Component {
           <div className='App-intro container'>
             <Navbar />
             <Switch>
-
               <Route exact path='/' component={Posts} />
               <Route exact path='/about' component={AboutPage} />
               <Route exact path='/contact' component={ContactPage} />
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/register' component={RegisterPage} />
-              <Route exact path='/posts' component={Posts} />
-              <Redirect exact from='/post' to='/posts' />
-              <Route exact path='/posts/:slug' component={PostDetail} />
+              <Route exact path='/courses' component={Courses} />
+              <Redirect exact from='/course' to='/courses' />
+              <Route exact path='/courses/:slug' component={CourseDetail} />
+              <Route exact path='/courses/:courseSlug/lessons' component={CourseDetail} />
+              <Route exact path='/courses/:courseSlug/lessons/:lessonSlug' component={LessonDetail} />
               <Route exact path='/pages' component={Pages} />
               <Redirect exact from='/page' to='/pages' />
               <Route exact path='/pages/:slug' component={PageDetail} />
+              <Route exact path='/posts' component={Posts} />
+              <Redirect exact from='/post' to='/posts' />
+              <Route exact path='/posts/:slug' component={PostDetail} />
+
+              
               <Route component={Page404} />
             </Switch>
           </div>
