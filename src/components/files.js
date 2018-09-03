@@ -49,6 +49,16 @@ class FileComponent extends Component {
                               }
                    </div>
                   }
+
+                   {file.type === 'audio' && 
+                    <div>
+                          {file.url && 
+                                <div className="embed-responsive embed-responsive-16by9">
+                                <video className="embed-responsive-item" src={file.url} controls/>
+                                </div>
+                              }
+                   </div>
+                  }
               </div>
           }
       </div>)

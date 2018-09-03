@@ -76,6 +76,7 @@ class LessonDetailComponent extends Component {
           {lesson.content && <Markdown>{lesson.content}</Markdown>}
 
           {lesson.video && <File className='my-5' resource={lesson.video} />}
+          {lesson.audio && <File className='my-5' resource={lesson.audio} />}
             
 
           {lesson.displayComments && <Comments count={comments.count} path={comments.path} />}
