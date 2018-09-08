@@ -78,7 +78,7 @@ class CourseDetailComponent extends Component {
              
            </div>
 
-             {course.video &&  <div className='col-12 col-md-6'><File className='my-5' resource={course.video} /></div>}
+             {course.video &&  <div className='col-12 col-md-6'><File className='' resource={course.video} /></div>}
                {(course.image && !course.video) && 
                   <div className='col-12 col-md-6'>
                     <img className='img-fluid' src={course.image} alt={`${course.title} thumbnail`} /> 

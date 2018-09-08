@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import {API_PUBLIC_KEY} from '../config'
 
+
+import Player from 'srvup-player'
 import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
@@ -43,9 +45,7 @@ class FileComponent extends Component {
                   {file.type === 'video' && 
                     <div>
                           {file.url && 
-                                <div className="embed-responsive embed-responsive-16by9">
-                                <video className="embed-responsive-item" src={file.url} controls/>
-                                </div>
+                                <Player  url={file.url} />
                               }
                    </div>
                   }
@@ -53,9 +53,7 @@ class FileComponent extends Component {
                    {file.type === 'audio' && 
                     <div>
                           {file.url && 
-                                <div className="embed-responsive embed-responsive-16by9">
-                                <video className="embed-responsive-item" src={file.url} controls/>
-                                </div>
+                                <Player  url={file.url} />
                               }
                    </div>
                   }
