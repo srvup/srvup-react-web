@@ -24,9 +24,14 @@ $ npm install
 
 5. Copy your `Public token` from your newly created client in https://www.srvup.com/apps
 
-6. Open up `/src/config/index.js`:
-    - replace `'<your-test-public-key>'` with your test key
 
+6. Create a `.env` file in the root of your project (on the same level as `package.json`). Add/modify the following:
+```
+REACT_APP_MY_KEY = '<your-test-public-key>'
+REACT_APP_PROJECT_NAME = '<your-project-name>'
+REACT_APP_BRAND_NAME = '<your-brand-name>' // for navbar
+```
+> More `.env` items will be added. Do you have some ideas? Let us know.
 
 7. Ready for production? 
     - Repeat steps 1-6.
