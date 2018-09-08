@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 
 import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from '../config'
-import {Loading, Page404} from '../design'
+import {HeadHelmet, Loading, Page404} from '../design'
 import {Link} from '../utils/'
 
 import srvup, {Markdown} from 'srvup'
@@ -68,6 +68,7 @@ class PageDetailComponent extends Component {
     return ( <div className='py-3'>
         <Loading className='text-center' isLoading={loading} />
         {page && <div>
+          <HeadHelmet pageTitle={page.title} />
           <h1>{page.title}</h1>
           {page.content && <Markdown>{page.content}</Markdown>}
           
@@ -126,6 +127,7 @@ class PagesComponent extends Component {
     const {pages} = this.state
     return (
         <div className='py-3'>
+        <HeadHelmet pageTitle={"Pages"} />
           <Loading className='text-center' isLoading={this.state.loading} />
           {pages.length > 0 && pages.map((data, index)=>{
            return <div className='border-bottom mb-3' key={index}>

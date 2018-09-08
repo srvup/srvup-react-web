@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 import {API_PUBLIC_KEY, History} from './../config'
+import {HeadHelmet} from './../design'
 import {FormErrorText, Link} from '../utils'
 
 import {parseQueryString, isSafeRedirect} from './../utils'
@@ -62,6 +63,7 @@ class LoginComponent extends Component {
   render() {
     const {errors} = this.state
     return (<div className='col-12 col-md-6 mx-auto my-4'>
+      <HeadHelmet pageTitle={'Login'} />
         {errors.non_field_errors && 
           <div className='alert alert-danger'>
             <b>Error</b><FormErrorText className='text-dark' error={errors.non_field_errors} />
@@ -178,6 +180,7 @@ class RegisterComponent extends Component {
   render() {
     const {errors} = this.state
     return (<div className='col-12 col-md-6 mx-auto my-4'>
+       <HeadHelmet pageTitle={'Register'} />
         {errors.non_field_errors && 
           <div className='alert alert-danger'>
             <b>Error</b><FormErrorText className='text-dark' error={errors.non_field_errors} />

@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 
 import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from './../config'
-import {Loading, Page404} from '../design'
+import {HeadHelmet, Loading, Page404} from '../design'
 
 import {Link} from '../utils/'
 
@@ -64,6 +64,7 @@ class PostDetailComponent extends Component {
     return ( <div className='py-3'>
       <Loading className='text-center' isLoading={this.state.loading} />
       {post && <div>
+          <HeadHelmet pageTitle={`${post.title} | Post`} />
           <h1>{post.title}</h1>
           {post.content && <Markdown>{post.content}</Markdown>}
 
@@ -136,6 +137,7 @@ class PostsComponent extends Component {
     return (
         <div className='py-3'>
         <Loading className='text-center' isLoading={this.state.loading} />
+         <HeadHelmet pageTitle={`Posts`} />
           {posts.length > 0 && posts.map((data, index)=>{
            return <div className='border-bottom mb-3 pb-5' key={index}>
              <h1><Link default to={`/posts/${data.slug}`}>{data.title}</Link></h1>
