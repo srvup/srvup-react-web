@@ -8,6 +8,7 @@ import {History} from './config'
 import {LoginPage, RegisterPage} from './components/auth'
 
 import Courses, {CourseDetail} from './components/courses'
+import HomePage from './components/home'
 import {LessonDetail} from './components/lessons'
 
 import Pages, {PageDetail} from './components/pages'
@@ -27,7 +28,7 @@ class App extends Component {
           <div className='App-intro container'>
             <Navbar />
             <Switch>
-              <Route exact path='/' component={Posts} />
+              <Route exact path='/' component={HomePage} />
               <Route exact path='/about' component={AboutPage} />
               <Route exact path='/contact' component={ContactPage} />
               <Route exact path='/login' component={LoginPage} />
