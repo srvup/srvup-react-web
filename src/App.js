@@ -15,7 +15,7 @@ import Posts, {PostDetail} from './components/posts'
 
 import {Page404, Navbar, AboutPage, ContactPage} from './design'
 import {HeadHelmet} from './design'
-
+import './design/markdown.css'
 
 class App extends Component {
   render () {
