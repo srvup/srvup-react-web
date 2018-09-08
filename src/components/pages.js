@@ -70,7 +70,7 @@ class PageDetailComponent extends Component {
         {page && <div>
           <HeadHelmet pageTitle={page.title} />
           <h1>{page.title}</h1>
-          {page.content && <Markdown>{page.content}</Markdown>}
+          {page.content && <Markdown className='min-500'>{page.content}</Markdown>}
           
           {page.displayComments && <Comments count={comments.count} path={comments.path} />}
           </div>
@@ -126,7 +126,7 @@ class PagesComponent extends Component {
   render () {
     const {pages} = this.state
     return (
-        <div className='py-3'>
+        <div className='py-3 min-500'>
         <HeadHelmet pageTitle={"Pages"} />
           <Loading className='text-center' isLoading={this.state.loading} />
           {pages.length > 0 && pages.map((data, index)=>{
