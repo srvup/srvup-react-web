@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
-
+import {withUser} from '../auth'
 import {Comments} from '../comments'
 import {File} from './files'
 import {API_PUBLIC_KEY} from '../config'
@@ -65,7 +65,6 @@ class LessonDetailComponent extends Component {
 
   render() {
     const {lesson} = this.state
-    console.log(lesson)
     const {loading} = this.state
     const {status} = this.state
     const comments = this.state.lesson.comments
@@ -79,7 +78,7 @@ class LessonDetailComponent extends Component {
           {lesson.audio && <File className='my-5' resource={lesson.audio} />}
             
 
-          {lesson.displayComments && <Comments count={comments.count} path={comments.path} />}
+          {lesson.displayComments && <Comments user={this.props.user} count={comments.count} path={comments.path} />}
           </div>
        }
 
@@ -91,7 +90,7 @@ class LessonDetailComponent extends Component {
 }
 
 
-export const LessonDetail = withRouter(LessonDetailComponent)
+export const LessonDetail = withUser(withRouter(LessonDetailComponent))
 
 
 // class LessonsComponent extends Component {

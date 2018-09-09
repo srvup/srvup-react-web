@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
-
+import {withUser} from '../auth'
 import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from '../config'
 import {Loading, Page404} from '../design'
@@ -100,7 +100,7 @@ class CourseDetailComponent extends Component {
              }
 
           {course.displayComments && <div className='row mt-5'>
-            <Comments className='col-12 ' count={comments.count} path={comments.path} />
+            <Comments user={this.props.user} className='col-12 ' count={comments.count} path={comments.path} />
             </div>
           }
           </div>
@@ -114,7 +114,7 @@ class CourseDetailComponent extends Component {
 }
 
 
-export const CourseDetail = withRouter(CourseDetailComponent)
+export const CourseDetail = withUser(withRouter(CourseDetailComponent))
 
 
 class CoursesComponent extends Component {
