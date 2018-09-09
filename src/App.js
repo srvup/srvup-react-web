@@ -12,7 +12,7 @@ import HomePage from './components/home'
 import {LessonDetail} from './components/lessons'
 
 import Pages, {PageDetail} from './components/pages'
-import Posts, {PostDetail} from './components/posts'
+import {Posts, PostDetail} from './posts'
 
 import {Page404, Navbar, AboutPage, ContactPage} from './design'
 import {HeadHelmet} from './design'
