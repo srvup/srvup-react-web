@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
-
+import {withUser} from '../auth'
 
 import {Comments} from '../comments'
 
-import {HeadHelmet, Loading, Page404} from '../design'
+import { HeadHelmet } from '../http'
+
+import {Loading, Page404} from '../design'
 
 import {withPosts} from './context'
 import {Link} from '../utils/'
@@ -34,7 +36,7 @@ class PostDetailComponent extends Component {
       loading: true
     }
   }
-  
+
   handleResponse = (data, status) =>{
     if (!this.cancelLookup) {
       if (status === 200){
@@ -74,7 +76,7 @@ class PostDetailComponent extends Component {
           {post.content && <Markdown>{post.content}</Markdown>}
 
          
-          {post.displayComments && <Comments count={comments.count} path={comments.path} />}
+          {post.displayComments && <Comments user={this.props.user} count={comments.count} path={comments.path} />}
           </div>
 
        }
@@ -86,7 +88,7 @@ class PostDetailComponent extends Component {
 }
 
 
-export const PostDetail = withPosts(withRouter(PostDetailComponent))
+export const PostDetail = withUser(withPosts(withRouter(PostDetailComponent)))
 
 
 class PostsComponent extends Component {
@@ -109,6 +111,6 @@ class PostsComponent extends Component {
 }
 
 
-const Posts = withPosts(withRouter(PostsComponent))
+const Posts = withUser(withPosts(withRouter(PostsComponent)))
 export default Posts
 

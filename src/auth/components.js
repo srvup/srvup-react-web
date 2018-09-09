@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import {withRouter} from 'react-router-dom'
 
-import {API_PUBLIC_KEY, History} from './../config'
-import {HeadHelmet} from './../design'
-import {FormErrorText, Link} from '../utils'
+import {API_PUBLIC_KEY} from './../config'
+import {HeadHelmet} from './../http'
+import {FormErrorText, Link} from './../utils'
+import {withUser} from './context'
 
-import {parseQueryString, isSafeRedirect} from './../utils'
 import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
@@ -20,32 +19,9 @@ class LoginComponent extends Component {
     }
   }
 
-  handleResponse = (data, status) =>{
-    // console.log(data)
-    if (status === 200){
-      this.setState({
-        token: data.token,
-        loading: false
-      })
-      srvup.userToken(data.token)
-      const searchDict = parseQueryString(History.location.search)
-      const next = searchDict.next
-      const isSafe = isSafeRedirect(next)
-      if (isSafe){
-        History.replace(next)
-      } else {
-        History.replace("/")
-      }
-    } else {
-      this.setState({
-        loading: false
-      })
-    }
-  }
-
-
   handleInputChange = (event) => {
     event.preventDefault()
+    this.props.user.clearErrors()
     const currentTarget = event.target.name
     const currentValue = event.target.value
     this.setState({
@@ -56,45 +32,45 @@ class LoginComponent extends Component {
     event.preventDefault()
     const {username} = this.state
     const {password} = this.state
-    srvup.login(username, password, this.handleResponse)
+    this.props.user.login(username, password)
   }
 
 
   render() {
-    const {errors} = this.state
+    const {errorsLogin, hasLoginErrors} = this.props.user.state
     return (<div className='col-12 col-md-6 mx-auto my-4'>
       <HeadHelmet pageTitle={'Login'} />
-        {errors.non_field_errors && 
+        {errorsLogin.non_field_errors && 
           <div className='alert alert-danger'>
-            <b>Error</b><FormErrorText className='text-dark' error={errors.non_field_errors} />
+            <b>Error</b><FormErrorText className='text-dark' error={errorsLogin.non_field_errors} />
             </div>
         }
        <form onSubmit={this.handleSubmit}>
          <div className='form-group'>
            <label htmlFor='username'>Username / Email</label>
            <input type='text' 
-                 className={`form-control  ${errors.username && 'is-invalid'}`}
+                 className={`form-control  ${errorsLogin.username && 'is-invalid'}`}
                  value={this.state.username} 
                  placeholder='jon.snow / kingofthe@north.com' 
                  name='username' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.username} />
+           <FormErrorText error={errorsLogin.username} />
          </div>
          <div className='form-group'>
            <label htmlFor='password'>Password</label>
            <input type='password' 
-                 className={`form-control ${errors.password && 'is-invalid'}`}
+                 className={`form-control ${errorsLogin.password && 'is-invalid'}`}
                  value={this.state.password} 
                  placeholder='*******' 
                  name='password' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.password} />
+           <FormErrorText error={errorsLogin.password} />
          </div>
 
 
-         <button type='submit' className={`btn ${Object.keys(errors).length ? 'btn-danger disabled' : 'btn-primary'}`}>Login</button>
+         <button type='submit' className={`btn ${hasLoginErrors ? 'btn-danger disabled' : 'btn-primary'}`}>Login</button>
        </form>
        <Link className='mt-3 btn btn-outline-primary' to='/register'>Register</Link>
       </div>)
@@ -102,7 +78,7 @@ class LoginComponent extends Component {
 }
 
 
-export const LoginPage = withRouter(LoginComponent)
+export const LoginPage = withUser(LoginComponent)
 
 
 class RegisterComponent extends Component {
@@ -117,24 +93,9 @@ class RegisterComponent extends Component {
       token: null
     }
   }
-
-  handleResponse = (data, status) =>{
-    console.log(data, status)
-    if (status === 201){
-      this.setState({
-        token: data.token,
-        loading: false
-      })
-    } else {
-      this.setState({
-        loading: false,
-        errors: data
-      })
-    }
-  }
-
   handleInputChange = (event) => {
     event.preventDefault()
+    this.props.user.clearErrors()
     const currentTarget = event.target.name
     const currentValue = event.target.value
     this.setState({
@@ -142,6 +103,7 @@ class RegisterComponent extends Component {
     })
     if (currentTarget === 'password2') {
       if (currentValue === this.state.password){
+
           this.setState({
            errors: {
              'password': null,
@@ -169,8 +131,9 @@ class RegisterComponent extends Component {
                 password:  password, 
                 password2: password2, 
                 email: email}
-    const includeAuthToken = false
-    srvup.post('/register/', data, this.handleResponse, includeAuthToken)
+    // const includeAuthToken = false
+    //srvup.post('/register/', data, this.handleResponse, includeAuthToken)
+    this.props.user.register(data)
 
   }
   componentDidMount () {
@@ -178,64 +141,68 @@ class RegisterComponent extends Component {
 
 
   render() {
-    const {errors} = this.state
+    const {errorsRegister, hasRegisterErrors} = this.props.user.state
     return (<div className='col-12 col-md-6 mx-auto my-4'>
        <HeadHelmet pageTitle={'Register'} />
-        {errors.non_field_errors && 
-          <div className='alert alert-danger'>
-            <b>Error</b><FormErrorText className='text-dark' error={errors.non_field_errors} />
-            </div>
-        }
+  
+
+            {errorsRegister.non_field_errors && 
+              <div className='alert alert-danger'>
+                <b>Error</b> <FormErrorText className='text-dark' error={errorsRegister.non_field_errors} />
+                </div>
+            }
+   
+       
        <form onSubmit={this.handleSubmit}>
          <div className='form-group'>
            <label htmlFor='username'>Username</label>
            <input type='text' 
-                 className={`form-control  ${errors.username && 'is-invalid'}`}
+                 className={`form-control  ${errorsRegister.username && 'is-invalid'}`}
                  value={this.state.username} 
                  placeholder='Username' 
                  name='username' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.username} />
+           <FormErrorText error={errorsRegister.username} />
          </div>
          <div className='form-group'>
            <label htmlFor='email'>Email</label>
            <input type='email' 
-                 className={`form-control ${errors.email && 'is-invalid'}`}
+                 className={`form-control ${errorsRegister.email && 'is-invalid'}`}
                  value={this.state.email} 
                  placeholder='Email' 
                  name='email' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.email} />
+           <FormErrorText error={errorsRegister.email} />
          </div>
 
          <div className='form-group'>
            <label htmlFor='password'>Password</label>
            <input type='password' 
-                 className={`form-control ${errors.password && 'is-invalid'}`}
+                 className={`form-control ${errorsRegister.password && 'is-invalid'}`}
                  value={this.state.password} 
                  placeholder='*******' 
                  name='password' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.password} />
+           <FormErrorText error={errorsRegister.password} />
          </div>
 
          <div className='form-group'>
            <label htmlFor='password2'>Confirm Password</label>
            <input type='password' 
-                 className={`form-control ${errors.password2 && 'is-invalid'}`}
+                 className={`form-control ${errorsRegister.password2 && 'is-invalid'}`}
                  value={this.state.password2} 
                  placeholder='*******'
                  name='password2' 
                  onChange={this.handleInputChange} 
                  required='required' />
-           <FormErrorText error={errors.password2} />
+           <FormErrorText error={errorsRegister.password2} />
          </div>
 
 
-         <button type='submit' className={`btn ${Object.keys(errors).length ? 'btn-danger disabled' : 'btn-primary'}`}>Register</button>
+         <button type='submit' className={`btn ${hasRegisterErrors ? 'btn-danger disabled' : 'btn-primary'}`}>Register</button>
        </form>
        <Link className='mt-3 btn btn-outline-primary' to='/login'>Login</Link>
       </div>
@@ -244,5 +211,5 @@ class RegisterComponent extends Component {
 }
 
 
-export const RegisterPage = withRouter(RegisterComponent)
+export const RegisterPage = withUser(RegisterComponent)
 

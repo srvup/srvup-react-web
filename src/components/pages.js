@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
+import {withUser} from '../auth'
+
 import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from '../config'
-import {HeadHelmet, Loading, Page404} from '../design'
+import {HeadHelmet} from '../http'
+import {Loading, Page404} from '../design'
 import {Link} from '../utils/'
 
 import srvup, {Markdown} from 'srvup'
@@ -72,7 +75,7 @@ class PageDetailComponent extends Component {
           <h1>{page.title}</h1>
           {page.content && <Markdown className='min-500'>{page.content}</Markdown>}
           
-          {page.displayComments && <Comments count={comments.count} path={comments.path} />}
+          {page.displayComments && <Comments user={this.props.user} count={comments.count} path={comments.path} />}
           </div>
        }
 
@@ -84,7 +87,7 @@ class PageDetailComponent extends Component {
 }
 
 
-export const PageDetail = withRouter(PageDetailComponent)
+export const PageDetail = withRouter(withUser(PageDetailComponent))
 
 
 class PagesComponent extends Component {
@@ -141,6 +144,6 @@ class PagesComponent extends Component {
 }
 
 
-const Pages = withRouter(PagesComponent)
+const Pages = withUser(withRouter(PagesComponent))
 export default Pages
 

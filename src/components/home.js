@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import {HeadHelmet} from './../design'
+import {HeadHelmet} from './../http'
 import {Posts} from './../posts'
 
 class HomePage extends Component {

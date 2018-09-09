@@ -1,12 +1,19 @@
 import React from 'react'
+
+import {withUser} from '../auth'
 import {PageDetail} from '../components/pages'
 
-const AboutPage = (props) => (
+const About = (props) => (
   <PageDetail slug='about' />
 )
 
-const ContactPage = (props) => (
+const Contact = (props) => (
   <PageDetail slug='contact' />
 )
+
+
+const AboutPage = withUser(About)
+const ContactPage = withUser(Contact)
+
 
 export {AboutPage, ContactPage}

@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 
-import { Router, Route, Switch, Redirect} from 'react-router-dom'
+import { Router,  Switch, Redirect} from 'react-router-dom'
 
 import './App.css'
 
 import {History} from './config'
-import {LoginPage, RegisterPage} from './components/auth'
+import {
+    LoginPage, 
+    RegisterPage
+    } from './auth'
 
 import Courses, {CourseDetail} from './components/courses'
 import HomePage from './components/home'
@@ -15,14 +18,14 @@ import Pages, {PageDetail} from './components/pages'
 import {Posts, PostDetail, PostsRoute} from './posts'
 
 import {Page404, Navbar, AboutPage, ContactPage} from './design'
-import {HeadHelmet} from './design'
+import {HeadHelmet} from './http'
+import {Route} from './utils'
 import './design/markdown.css'
 
 class App extends Component {
   render () {
     return (
       <Router history={History}>
-
         <div className='App'>
           <HeadHelmet />
           <div className='App-intro container'>

@@ -26,7 +26,6 @@ export class PostContextProviderComponent extends Component {
 
 
   handleResponse = (data, status) =>{
-    console.log(data)
     if (!this.cancelLookup) {
       if (status === 200){
         let currentPosts = this.state.posts

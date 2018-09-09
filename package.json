@@ -1,6 +1,6 @@
 {
   "name": "v1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "emoji-dictionary": "^1.0.9",
@@ -14,7 +14,7 @@
     "react-spinkit": "^3.0.0",
     "react-syntax-highlighter": "^8.0.1",
     "remark-shortcodes": "^0.2.1",
-    "srvup": "0.0.775",
+    "srvup": "0.1.1",
     "srvup-player": "0.0.2",
     "url-parse": "^1.4.3"
   },
