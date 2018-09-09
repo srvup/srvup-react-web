@@ -12,7 +12,7 @@ import HomePage from './components/home'
 import {LessonDetail} from './components/lessons'
 
 import Pages, {PageDetail} from './components/pages'
-import {Posts, PostDetail} from './posts'
+import {Posts, PostDetail, PostsRoute} from './posts'
 
 import {Page404, Navbar, AboutPage, ContactPage} from './design'
 import {HeadHelmet} from './design'
@@ -28,7 +28,7 @@ class App extends Component {
           <div className='App-intro container'>
             <Navbar />
             <Switch>
-              <Route exact path='/' component={HomePage} />
+              <PostsRoute exact path='/' component={HomePage} />
               <Route exact path='/about' component={AboutPage} />
               <Route exact path='/contact' component={ContactPage} />
               <Route exact path='/login' component={LoginPage} />
@@ -40,10 +40,10 @@ class App extends Component {
               <Route exact path='/courses/:courseSlug/lessons/:lessonSlug' component={LessonDetail} />
               <Route exact path='/pages' component={Pages} />
               <Redirect exact from='/page' to='/pages' />
-              <Route exact path='/pages/:slug' component={PageDetail} />
-              <Route exact path='/posts' component={Posts} />
+              <PostsRoute exact path='/pages/:slug' component={PageDetail} />
+              <PostsRoute exact path='/posts' component={Posts} />
               <Redirect exact from='/post' to='/posts' />
-              <Route exact path='/posts/:slug' component={PostDetail} />
+              <PostsRoute exact path='/posts/:slug' component={PostDetail} />
 
               
               <Route component={Page404} />

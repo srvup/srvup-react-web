@@ -2,14 +2,20 @@ import React, { Component } from 'react'
 import {withRouter} from 'react-router-dom'
 
 
+
+
 import {Comments} from '../comments'
-import {API_PUBLIC_KEY} from './../config'
+
 import {HeadHelmet, Loading, Page404} from '../design'
 
+import {withPosts} from './context'
 import {Link} from '../utils/'
 
+
+import {API_PUBLIC_KEY} from './../config'
 import srvup, {Markdown} from 'srvup'
 srvup.api(API_PUBLIC_KEY)
+
 
 
 class PostDetailComponent extends Component {
@@ -28,7 +34,7 @@ class PostDetailComponent extends Component {
       loading: true
     }
   }
-
+  
   handleResponse = (data, status) =>{
     if (!this.cancelLookup) {
       if (status === 200){
@@ -47,10 +53,9 @@ class PostDetailComponent extends Component {
 
   componentDidMount () {
     let slug = this.props.match.params.slug || this.props.slug
-    if (slug && !this.cancelLookup){
+    if (!this.cancelLookup){
       srvup.posts(this.handleResponse, slug)
     }
-    
   }
 
   componentWillUnmount () {
@@ -59,10 +64,10 @@ class PostDetailComponent extends Component {
 
 
   render() {
-    const {post} = this.state
+    const {post, loading} = this.state
     const comments = this.state.post.comments
     return ( <div className='py-3'>
-      <Loading className='text-center' isLoading={this.state.loading} />
+      <Loading className='text-center' isLoading={loading} />
       {post && <div>
           <HeadHelmet pageTitle={`${post.title} | Post`} />
           <h1>{post.title}</h1>
@@ -73,7 +78,7 @@ class PostDetailComponent extends Component {
           </div>
 
        }
-       {post === null && this.state.loading === false ? <Page404 /> : ""}
+       {post === null && loading === false ? <Page404 /> : ""}
 
       </div>
      )
@@ -81,62 +86,15 @@ class PostDetailComponent extends Component {
 }
 
 
-export const PostDetail = withRouter(PostDetailComponent)
+export const PostDetail = withPosts(withRouter(PostDetailComponent))
 
 
 class PostsComponent extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      posts: [],
-      next: null,
-      count: 0,
-      loading: true
-    }
-  }
-
-  handleResponse = (data, status) =>{
-    console.log(data)
-    if (!this.cancelLookup) {
-      if (status === 200){
-        let currentPosts = this.state.posts
-        let newPosts = currentPosts.concat(data.results)
-        this.setState({
-          posts: newPosts,
-          next: data.next,
-          count: data.count,
-          loading: false
-        })
-      } else {
-        this.setState({
-          loading: false
-        })
-      }
-    }
-  }
-
-  getNext = (event) =>{
-    if (!this.cancelLookup && this.state.next){
-      srvup.get(this.state.next, this.handleResponse)
-    }
-    
-  }
-  componentDidMount () {
-    if (!this.cancelLookup) {
-      srvup.posts(this.handleResponse)
-      // srvup.get('/posts/', this.handleResponse, false)
-    }
-    
-  }
-
-  componentWillUnmount () {
-    this.cancelLookup = true
-  }
   render () {
-    const {posts} = this.state
+    const {posts, next, loading} = this.props.posts.state //this.state
     return (
         <div className='py-3'>
-        <Loading className='text-center' isLoading={this.state.loading} />
+        <Loading className='text-center' isLoading={loading} />
          {!this.props.hideHelment && <HeadHelmet pageTitle={`Posts`} />}
           {posts.length > 0 && posts.map((data, index)=>{
            return <div className='border-bottom mb-3 pb-5' key={index}>
@@ -144,13 +102,13 @@ class PostsComponent extends Component {
              {data.content && <Markdown previewCutoff>{data.content}</Markdown>}
              </div>
           })}
-          {this.state.next && <button className='btn btn-primary' onClick={this.getNext}>Load more</button>}
+          {next && <button className='btn btn-primary' onClick={this.props.posts.getNext}>Load more</button>}
         </div>
     )
   }
 }
 
 
-const Posts = withRouter(PostsComponent)
+const Posts = withPosts(withRouter(PostsComponent))
 export default Posts
 
