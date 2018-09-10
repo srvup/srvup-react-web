@@ -72,7 +72,7 @@ class PageDetailComponent extends Component {
         <Loading className='text-center' isLoading={loading} />
         {page && <div>
           <HeadHelmet pageTitle={page.title} />
-          <h1>{page.title}</h1>
+          {!this.props.hideTitle && <h1>{page.title}</h1>}
           {page.content && <Markdown className='min-500'>{page.content}</Markdown>}
           
           {page.displayComments && <Comments user={this.props.user} count={comments.count} path={comments.path} />}

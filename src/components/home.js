@@ -14,7 +14,7 @@ class HomePage extends Component {
             <div>
             <HeadHelmet />
             {defaultPage ? 
-                    <PageDetail slug={defaultPage} /> : 
+                    <PageDetail hideTitle slug={defaultPage} /> : 
                     <Posts hideHelment />
             }
             
