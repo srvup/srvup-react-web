@@ -4,11 +4,11 @@ import {withRouter} from 'react-router-dom'
 import {withUser} from '../auth'
 import {Comments} from '../comments'
 import {API_PUBLIC_KEY} from '../config'
-import {Loading, Page404} from '../design'
+import {Loading, Page404, Markdown} from '../design'
 import {File} from './files'
 import {Link} from '../utils/'
 
-import srvup, {Markdown} from 'srvup'
+import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
 

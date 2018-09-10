@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {Link, Timesince} from '../utils'
 import {API_PUBLIC_KEY, History} from './../config'
-import {Loading} from '../design'
-import srvup, {Markdown, handleLoginRequired} from 'srvup'
+import {Loading, Markdown} from '../design'
+import srvup, {handleLoginRequired} from 'srvup'
 
 import './comments.css'
 

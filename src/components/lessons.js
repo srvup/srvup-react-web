@@ -5,9 +5,9 @@ import {withUser} from '../auth'
 import {Comments} from '../comments'
 import {File} from './files'
 import {API_PUBLIC_KEY} from '../config'
-import {Loading, Page404} from '../design'
+import {Loading, Page404, Markdown} from '../design'
 
-import srvup, {Markdown} from 'srvup'
+import srvup from 'srvup'
 
 
 srvup.api(API_PUBLIC_KEY)

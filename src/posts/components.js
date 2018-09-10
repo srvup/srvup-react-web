@@ -8,14 +8,14 @@ import {Comments} from '../comments'
 
 import { HeadHelmet } from '../http'
 
-import {Loading, Page404} from '../design'
+import {Loading, Page404, Markdown} from '../design'
 
 import {withPosts} from './context'
 import {Link} from '../utils/'
 
 
 import {API_PUBLIC_KEY} from './../config'
-import srvup, {Markdown} from 'srvup'
+import srvup from 'srvup'
 srvup.api(API_PUBLIC_KEY)
 
 
@@ -51,6 +51,14 @@ class PostDetailComponent extends Component {
       }
      }
   }
+
+  handleEmailCapture = (data) =>{
+    srvup.post('/marketing/email-captures/', data, (response, status)=>{
+      console.log(response)
+    })
+  }
+
+
 
 
   componentDidMount () {
@@ -101,7 +109,7 @@ class PostsComponent extends Component {
           {posts.length > 0 && posts.map((data, index)=>{
            return <div className='border-bottom mb-3 pb-5' key={index}>
              <h1><Link default to={`/posts/${data.slug}`}>{data.title}</Link></h1>
-             {data.content && <Markdown previewCutoff>{data.content}</Markdown>}
+             {data.content && <Markdown previewCutoff >{data.content}</Markdown>}
              </div>
           })}
           {next && <button className='btn btn-primary' onClick={this.props.posts.getNext}>Load more</button>}
