@@ -5,7 +5,7 @@ import {Helmet} from 'react-helmet'
 
 const currentUrl = window.location.href
 const hostname = window.location.hostname
-const rootTitle = process.env.REACT_APP_PROJECT_NAME || hostname
+const rootTitle = process.env.REACT_APP_BRAND_NAME || process.env.REACT_APP_NAME || process.env.REACT_APP_PROJECT_NAME || hostname
 const rootPath = `${window.location.protocol}//${window.location.hostname}`
 
 class HeadHelmet extends Component {
