@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
 import {Link} from '../utils'
-const brandName = process.env.REACT_APP_BRAND_NAME || process.env.REACT_APP_PROJECT_NAME ||  window.location.hostname
+const brandName =  process.env.REACT_APP_BRAND_NAME || process.env.REACT_APP_NAME || process.env.REACT_APP_PROJECT_NAME ||  window.location.hostname
 class Navbar extends Component {
   render () {
     return (
