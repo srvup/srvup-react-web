@@ -30,7 +30,13 @@ $ npm install
 REACT_APP_MY_KEY = '<your-test-public-key>'
 REACT_APP_PROJECT_NAME = '<your-project-name>'
 REACT_APP_BRAND_NAME = '<your-brand-name>' // for navbar
+REACT_APP_NAME="<your-brand-name>" // navbar name backup
+REACT_APP_CUSTOM_DOMAIN="<your-custom-domain-if-any>"
+REACT_APP_LOGO=""<your-logo-url>""
+REACT_APP_KEY="<your-public-key-backup>"
+REACT_APP_PRIMARY_COLOR="<your-brand-primary-color>"
 ```
+
 > More `.env` items will be added. Do you have some ideas? Let us know.
 
 7. Ready for production? 
